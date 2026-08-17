@@ -1,0 +1,6 @@
+{
+  "name": "Unique Cooling Center",
+  "description": "Elite Air Conditioning & Appliance Repair service in North Barrackpur, West Bengal. Expert, affordable repair for AC, washing machines, refrigerators, kitchen chimneys, Aquaguard RO water purifiers, and geysers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

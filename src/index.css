@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", var(--font-sans);
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom palette matching Elite Air Conditioning & Repair */
+  --color-primary-frost: #0f4c81;
+  --color-primary-dark: #072a4b;
+  --color-electric-cyan: #00f0ff;
+  --color-vivid-amber: #ff9f1c;
+  --color-ice-bg: #f0f7fc;
+  --color-ice-light: #f7fbfe;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: var(--font-sans);
+    background-color: #fafbfc;
+    color: #1e293b;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Custom animations and styling */
+@keyframes snowgear-spin {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-snowgear {
+  animation: snowgear-spin 12s linear infinite;
+}
+
+/* Scroll shadow for headers */
+.sticky-nav-active {
+  box-shadow: 0 4px 20px -5px rgba(15, 76, 129, 0.1);
+  background-color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+}
