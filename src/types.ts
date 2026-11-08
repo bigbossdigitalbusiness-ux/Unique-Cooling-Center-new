@@ -22,6 +22,9 @@ export interface Testimonial {
   text: string;
   date: string;
   avatarUrl?: string;
+  serviceTag?: string;
+  verified?: boolean;
+  helpfulCount?: number;
 }
 
 export interface CitationLink {
@@ -42,6 +45,8 @@ export interface BusinessDetails {
     highlights: string[];
   };
   hours: string;
+  experienceYears?: number;
   mapUrl?: string;
+  googleReviewsUrl?: string;
   citations?: CitationLink[];
 }

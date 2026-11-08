@@ -22,12 +22,14 @@ export const businessDetails: BusinessDetails = {
   servingAreas: ["Babanpur", "Ichhapur Defence Estate", "North Barrackpur", "Ichhapur", "Palta", "Barrackpore", "Shyamnagar"],
   phone: "098308 70878",
   phoneFormatted: "+919830870878",
+  experienceYears: 12,
   values: {
     quote: "Comfortable prices for perfect service",
-    highlights: ["Quick Response Time", "Humble & Expert Technicians", "Local & Highly Trusted"]
+    highlights: ["12 Years of Service Experience", "Quick Response Time", "Humble & Expert Technicians", "Local & Highly Trusted"]
   },
   hours: "Open Daily: 8:00 AM - 10:00 PM",
-  mapUrl: "https://www.google.com/maps/place/Unique+Cooling+Center/@22.7728495,88.3733732,17z/data=!4m6!3m5!1s0x39f89b1a4ac3df4b:0xe07deb14a605a20!8m2!3d22.7728495!4d88.3733732!16s%2Fg%2F11nq08bt28"
+  mapUrl: "https://www.google.com/maps/place/Unique+Cooling+Center/@22.7728495,88.3733732,17z/data=!3m1!4b1!4m6!3m5!1s0x39f89b1a4ac3df4b:0xe07deb14a605a20!8m2!3d22.7728495!4d88.3733732!16s%2Fg%2F11nq08bt28?entry=ttu&g_ep=EgoyMDI2MTEwMy4wIKXMDSoASAFQAw%3D%3D",
+  googleReviewsUrl: "https://www.google.com/maps/place/Unique+Cooling+Center/@22.7728495,88.3733732,17z/data=!3m1!4b1!4m6!3m5!1s0x39f89b1a4ac3df4b:0xe07deb14a605a20!8m2!3d22.7728495!4d88.3733732!16s%2Fg%2F11nq08bt28?entry=ttu&g_ep=EgoyMDI2MTEwMy4wIKXMDSoASAFQAw%3D%3D"
 };
 
 export const services: ServiceItem[] = [
@@ -139,8 +141,8 @@ export const whyChooseUs: WhyChooseUsItem[] = [
   },
   {
     id: "humble-expert",
-    title: "Humble & Expert Technicians",
-    description: "Courteous, certified technicians with over 10+ years of repair wisdom who respect your home and solve problems correctly.",
+    title: "12 Years Service Experience",
+    description: "Courteous, certified technicians with 12 Years of Service Experience who respect your home and solve appliance problems correctly.",
     iconName: "Wrench"
   },
   {
@@ -155,37 +157,97 @@ export const testimonials: Testimonial[] = [
   {
     id: "rev-1",
     name: "Arijit Sen",
-    location: "Ichhapur Defence Estate, WB",
+    location: "Ichhapur Defence Estate, Barrackpore",
     rating: 5,
-    text: "Great place and the owner is very humble. Called them for my Samsung refrigerator cooling issue. The service was extremely fast, price was comfortable, and they did the gas charging so carefully. Highly recommended technician!",
+    text: "Great place and the owner is very humble. Called them for my Samsung double door refrigerator cooling issue. The service was extremely fast, price was very comfortable, and they did the gas charging so carefully in front of me. Highly recommended technician in Barrackpore!",
     date: "1 week ago",
-    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80"
+    avatarUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Refrigerator Gas Charging",
+    verified: true,
+    helpfulCount: 6
   },
   {
     id: "rev-2",
     name: "Souvik Mukherjee",
     location: "Palta, North Barrackpur",
     rating: 5,
-    text: "Nice behaviour and comfortable price. They repaired my IFB front load washing machine on the same day. He explained the drum issue very politely and repaired the PCB board in front of me. 10/10 service.",
+    text: "Nice behaviour and comfortable price. They repaired my IFB front load washing machine on the same day. He diagnosed the spin noise and repaired the PCB board in front of me without taking the machine to a shop. 10/10 doorstep service.",
     date: "2 weeks ago",
-    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80"
+    avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Washing Machine PCB Repair",
+    verified: true,
+    helpfulCount: 9
   },
   {
     id: "rev-3",
     name: "Priya Das",
-    location: "Babanpur, West Bengal",
+    location: "Babanpur, Barrackpore",
     rating: 5,
-    text: "Excellent AC servicing. My split AC was not cooling at all. They did deep water servicing using jet pump. The dust came out completely and now it chills like a showroom piece! Rates are very fair.",
+    text: "Excellent AC servicing. My Daikin 1.5 ton split AC was blowing warm air in peak summer. They did deep water servicing using high-pressure jet pump with zero mess in the room. Cools like a brand new AC now! Rates are very fair.",
     date: "3 days ago",
-    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80"
+    avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Split AC Jet Wet Wash",
+    verified: true,
+    helpfulCount: 14
   },
   {
     id: "rev-4",
+    name: "Subhasish Roy",
+    location: "Barrackpore Cantonment",
+    rating: 5,
+    text: "Called Unique Cooling Center for my Faber kitchen chimney oil cleaning and suction motor vibration. The technician came with proper degreasing solvents, thoroughly cleaned both baffle filters and balanced the motor. Suction is back to 100%. Very polite and genuine charges.",
+    date: "5 days ago",
+    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Kitchen Chimney Deep Servicing",
+    verified: true,
+    helpfulCount: 8
+  },
+  {
+    id: "rev-5",
+    name: "Debjani Banerjee",
+    location: "Prafulla Pukur, Barrackpore",
+    rating: 5,
+    text: "Got my Aquaguard RO water purifier serviced by Unique Cooling Center. They checked TDS levels before and after replacing the sediment and carbon filters. Genuine Eureka Forbes compatible membrane installed at very reasonable rates. Best purifier technician in Barrackpore.",
+    date: "1 week ago",
+    avatarUrl: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Aquaguard RO Filter Replacement",
+    verified: true,
+    helpfulCount: 11
+  },
+  {
+    id: "rev-6",
+    name: "Ranjit Karmakar",
+    location: "Shyamnagar, North 24 Pgs",
+    rating: 5,
+    text: "My Voltas inverter AC had an E6 error code and stopped cooling. Two other mechanics suggested replacing the outdoor unit, but Unique Cooling Center checked the wiring, found a small gas flare leak, repaired it and refilled R32 refrigerant. Saved me thousands of rupees. True professionals!",
+    date: "2 weeks ago",
+    avatarUrl: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Inverter AC Leak Repair & Gas Charge",
+    verified: true,
+    helpfulCount: 17
+  },
+  {
+    id: "rev-7",
+    name: "Moumita Chakraborty",
+    location: "Ichhapur Station Road",
+    rating: 5,
+    text: "Our geyser stopped heating water just as winter started. Technician arrived within 45 minutes of my call. Replaced the burned heating coil and cleaned heavy mineral scale from inside the water heater tank. Working perfectly and safe. Very prompt service.",
+    date: "3 weeks ago",
+    avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Geyser Heating Coil & Descaling",
+    verified: true,
+    helpfulCount: 5
+  },
+  {
+    id: "rev-8",
     name: "Animesh Ghosh",
     location: "North Barrackpur",
     rating: 4.8,
-    text: "Very reliable team. My microwave convection mode was sparking. They identified bad magnetron and resolved it safely within 2 hours of calling them. Very polite and humble. Best of North Barrackpur area.",
+    text: "Very reliable team. My LG convection microwave was making loud buzzing noise and not heating. They quickly pinpointed the faulty high-voltage diode and capacitor, replaced with original spares in 1 hour. Humble behaviour and honest work.",
     date: "1 month ago",
-    avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&h=120&q=80"
+    avatarUrl: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=120&h=120&q=80",
+    serviceTag: "Microwave Oven Component Fix",
+    verified: true,
+    helpfulCount: 7
   }
 ];

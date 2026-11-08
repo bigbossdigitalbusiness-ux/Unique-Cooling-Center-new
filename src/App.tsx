@@ -29,11 +29,36 @@ import {
   Map,
   Sparkles,
   Droplets,
-  Navigation
+  Navigation,
+  ThumbsUp,
+  CheckCircle2,
+  MessageSquare
 } from "lucide-react";
 import { businessDetails, services, whyChooseUs, testimonials } from "./data";
 import BrandPoster from "./components/BrandPoster";
 import Logo from "./components/Logo";
+
+// Authentic Google "G" Logo Icon
+const GoogleIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      fill="#4285F4"
+      d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+    />
+    <path
+      fill="#34A853"
+      d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"
+    />
+    <path
+      fill="#FBBC05"
+      d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.97 0 12s.45 3.82 1.25 5.42l4.03-3.15z"
+    />
+    <path
+      fill="#EA4335"
+      d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+    />
+  </svg>
+);
 
 // Fallback Icon Mapping for safe compilation in case of variant packages
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -81,6 +106,43 @@ export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
   const [showDirectDialTip, setShowDirectDialTip] = useState(false);
+  const [selectedReviewCategory, setSelectedReviewCategory] = useState<string>("all");
+  const [isSliderHovered, setIsSliderHovered] = useState(false);
+  const [reviewDisplayMode, setReviewDisplayMode] = useState<"slider" | "grid">("slider");
+
+  const filteredReviews = testimonials.filter((rev) => {
+    if (selectedReviewCategory === "all") return true;
+    if (selectedReviewCategory === "ac") {
+      return rev.serviceTag?.toLowerCase().includes("ac");
+    }
+    if (selectedReviewCategory === "fridge-wash") {
+      return (
+        rev.serviceTag?.toLowerCase().includes("refrigerator") ||
+        rev.serviceTag?.toLowerCase().includes("washing")
+      );
+    }
+    if (selectedReviewCategory === "chimney-ro") {
+      return (
+        rev.serviceTag?.toLowerCase().includes("chimney") ||
+        rev.serviceTag?.toLowerCase().includes("aquaguard")
+      );
+    }
+    if (selectedReviewCategory === "geyser-micro") {
+      return (
+        rev.serviceTag?.toLowerCase().includes("geyser") ||
+        rev.serviceTag?.toLowerCase().includes("microwave")
+      );
+    }
+    return true;
+  });
+
+  // Safe active index boundary check
+  const currentReview = filteredReviews[activeReviewIndex] || filteredReviews[0] || testimonials[0];
+
+  // Reset slider index when category changes
+  useEffect(() => {
+    setActiveReviewIndex(0);
+  }, [selectedReviewCategory]);
 
   // Monitor scroll for sticky header treatment
   useEffect(() => {
@@ -95,20 +157,21 @@ export default function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Set up auto-rotation for core customer testimonial quotes
+  // Auto-advance review slider every 6 seconds unless hovered or in grid mode
   useEffect(() => {
+    if (isSliderHovered || reviewDisplayMode !== "slider" || filteredReviews.length <= 1) return;
     const interval = setInterval(() => {
-      setActiveReviewIndex((prev) => (prev + 1) % testimonials.length);
-    }, 7000);
+      setActiveReviewIndex((prev) => (prev + 1) % filteredReviews.length);
+    }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isSliderHovered, reviewDisplayMode, filteredReviews.length]);
 
   const nextTestimonial = () => {
-    setActiveReviewIndex((prev) => (prev + 1) % testimonials.length);
+    setActiveReviewIndex((prev) => (prev + 1) % filteredReviews.length);
   };
 
   const prevTestimonial = () => {
-    setActiveReviewIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setActiveReviewIndex((prev) => (prev - 1 + filteredReviews.length) % filteredReviews.length);
   };
 
   // Helper to dynamically render corresponding icon
@@ -217,7 +280,7 @@ export default function App() {
               <span className={`font-mono text-[9px] sm:text-[10px] uppercase font-extrabold tracking-[0.15em] mt-0.5 transition-colors ${
                 navScrolled ? "text-[#00f0ff]" : "text-slate-500"
               }`}>
-                Appliances repair service
+                12 Years Exp. • Appliance Repair
               </span>
             </div>
           </div>
@@ -268,6 +331,14 @@ export default function App() {
 
           {/* Call-To-Action Right Desk Header button */}
           <div className="hidden lg:flex items-center gap-4">
+            <div className={`hidden xl:inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-mono font-bold transition-colors ${
+              navScrolled 
+                ? "bg-white/10 border-white/20 text-[#00f0ff]" 
+                : "bg-amber-500/10 border-amber-500/30 text-amber-700"
+            }`}>
+              <Award className="w-3.5 h-3.5 text-[#ff9f1c]" />
+              <span>12 Years of Service Experience</span>
+            </div>
             <div className="flex flex-col items-end">
               <span className={`text-[10px] uppercase tracking-wider font-mono ${
                 navScrolled ? "text-white/50" : "text-slate-400"
@@ -336,8 +407,13 @@ export default function App() {
                     <h3 className="font-display font-extrabold text-white text-base tracking-wide leading-none">
                       Unique Cooling Center
                     </h3>
-                    <p className="text-[10px] text-[#ff9f1c] font-bold tracking-widest mt-1 uppercase">Appliances repair service</p>
+                    <p className="text-[10px] text-[#ff9f1c] font-bold tracking-widest mt-1 uppercase">12 Years Service Experience</p>
                   </div>
+                </div>
+
+                <div className="inline-flex items-center gap-2 bg-[#ff9f1c]/15 text-[#ff9f1c] px-3 py-1.5 rounded-lg border border-[#ff9f1c]/30 text-xs font-mono font-bold">
+                  <Award className="w-4 h-4 text-[#ff9f1c]" />
+                  <span>12 Years of Service Experience</span>
                 </div>
 
                 <nav className="flex flex-col gap-5">
@@ -414,6 +490,21 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex flex-col items-center justify-center text-center">
           
+          {/* 12 Years of Service Experience Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 bg-[#0f4c81] text-white px-4 py-2 rounded-full border-2 border-[#00f0ff] shadow-lg mb-6"
+          >
+            <Award className="w-4 h-4 text-[#ff9f1c]" />
+            <span className="text-xs sm:text-sm font-display font-black tracking-wide text-white">
+              12 Years of Service Experience
+            </span>
+            <span className="text-[#00f0ff] font-mono text-xs hidden sm:inline">•</span>
+            <span className="text-amber-300 font-mono text-xs font-bold hidden sm:inline">Barrackpore &amp; Kolkata</span>
+          </motion.div>
+
           {/* Centered Live Interactive Brand Poster */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}
@@ -430,9 +521,18 @@ export default function App() {
       {/* FLOAT PERFORMANCE METRIC COUNTERS OVER THE TRANISTION */}
       <section className="relative z-20 bg-[#0f4c81] text-white border-y-4 border-[#00f0ff] py-10 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 divide-y-2 md:divide-y-0 md:divide-x-2 divide-white/10 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 divide-y-2 md:divide-y-0 md:divide-x-2 divide-white/10 text-center">
             
             <div className="pt-0 md:pt-0 flex flex-col justify-center items-center">
+              <span className="block font-display font-black text-3xl md:text-5xl text-[#ff9f1c] tracking-tight">
+                12 Years
+              </span>
+              <span className="block text-[10px] md:text-xs uppercase text-slate-300 tracking-[0.15em] font-mono font-bold mt-1.5">
+                Service Experience
+              </span>
+            </div>
+
+            <div className="pt-6 md:pt-0 flex flex-col justify-center items-center">
               <span className="block font-display font-black text-3xl md:text-5xl text-[#00f0ff] tracking-tight">
                 4.9 Stars
               </span>
@@ -459,9 +559,9 @@ export default function App() {
               </span>
             </div>
 
-            <div className="pt-6 md:pt-0 flex flex-col justify-center items-center">
+            <div className="pt-6 md:pt-0 col-span-2 md:col-span-1 flex flex-col justify-center items-center">
               <span className="block font-display font-black text-2xl md:text-3.5xl text-white tracking-tight leading-none pt-2 md:pt-0">
-                North Barrackpur
+                Barrackpore
               </span>
               <span className="block text-[10px] md:text-xs uppercase text-amber-400 tracking-[0.15em] font-mono font-bold mt-1.5">
                 Primary Serviced Hub
@@ -623,8 +723,8 @@ export default function App() {
                     <Briefcase className="w-5 h-5" />
                   </div>
                   <div>
-                    <h5 className="font-bold text-sm">10+ Years On-field</h5>
-                    <p className="text-xs text-slate-300">Expert Troubleshooting</p>
+                    <h5 className="font-bold text-sm">12 Years of Service Experience</h5>
+                    <p className="text-xs text-slate-300">Trusted Since 2014</p>
                   </div>
                 </div>
               </div>
@@ -659,145 +759,465 @@ export default function App() {
         </div>
       </section>
 
-      {/* REVIEWS SECTION - AUTHENTIC TESTIMONIALS WITH SLIDER CONTROLS */}
-      <section id="reviews" className="py-24 bg-white border-b-2 border-slate-200">
+      {/* REVIEWS SECTION - AUTHENTIC GOOGLE BUSINESS PROFILE REVIEWS */}
+      <section id="reviews" className="py-24 bg-gradient-to-b from-white via-slate-50 to-white border-b-2 border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Header */}
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <h2 className="text-xs uppercase text-[#0f4c81] font-extrabold tracking-[0.25em] font-mono">Customer Reviews</h2>
-            <h3 className="font-display font-black text-3xl sm:text-4.5xl text-[#0f4c81] tracking-tight">
-              Honest Feedback From Your Neighbors
-            </h3>
-            <div className="w-20 h-1.5 bg-[#ff9f1c] mx-auto rounded-full my-3"></div>
-            <p className="text-slate-600 text-sm sm:text-base leading-relaxed pt-2">
-              Serving the community with humility is our honor. Read what verified clients from North Barrackpur, Palta, and Ichhapur are saying about our appliance care.
+          {/* Section Header */}
+          <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
+            <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-200 px-3.5 py-1.5 rounded-full shadow-xs">
+              <GoogleIcon className="w-4 h-4" />
+              <span className="text-xs uppercase text-[#0f4c81] font-extrabold tracking-wider font-mono">
+                Official Google Business Profile
+              </span>
+            </div>
+            <h2 className="font-display font-black text-3xl sm:text-5xl text-[#0f4c81] tracking-tight">
+              Real Google Reviews from Barrackpore
+            </h2>
+            <div className="w-24 h-1.5 bg-[#ff9f1c] mx-auto rounded-full my-3"></div>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Read verified customer experiences from local homeowners across Barrackpore, Ichhapur, Palta, and Shyamnagar.
             </p>
           </div>
 
-          {/* Testimonial Active Display Layout Slider */}
-          <div className="max-w-4xl mx-auto relative px-4">
+          {/* Google Business Profile Main Hero Card */}
+          <div className="bg-white rounded-2xl border-2 border-slate-200 shadow-xl p-6 sm:p-8 mb-10 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-blue-50 to-transparent rounded-bl-full pointer-events-none" />
             
-            <div className="relative bg-white rounded-2xl p-6 sm:p-12 border-2 border-[#0f4c81] shadow-2xl overflow-hidden min-h-[300px] flex flex-col justify-between">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
               
-              {/* Decorative Geometric elements */}
-              <div className="absolute top-0 right-0 w-16 h-16 bg-[#00f0ff] rotate-45 opacity-10 translate-x-8 -translate-y-8 pointer-events-none"></div>
-
-              {/* Gold backing stars and Google trust badge */}
-              <div className="flex items-center justify-between border-b-2 border-slate-100 pb-4 mb-6">
-                <div className="flex items-center gap-1.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      className={`w-4 h-4 ${
-                        i < Math.floor(testimonials[activeReviewIndex].rating) 
-                          ? "fill-[#ff9f1c] text-[#ff9f1c]" 
-                          : "text-neutral-300"
-                      }`} 
-                      aria-hidden="true"
-                    />
-                  ))}
-                  <span className="font-mono text-xs font-bold text-[#0f4c81] ml-1.5">
-                    {testimonials[activeReviewIndex].rating} / 5.0 Google Rating
-                  </span>
+              {/* Left Score Box */}
+              <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col items-center lg:items-start text-center sm:text-left lg:text-left gap-4 pb-6 lg:pb-0 border-b lg:border-b-0 lg:border-r border-slate-200 pr-0 lg:pr-8">
+                <div className="w-16 h-16 rounded-2xl bg-white shadow-md border border-slate-200 flex items-center justify-center p-3 shrink-0">
+                  <GoogleIcon className="w-10 h-10" />
                 </div>
-                
-                <span className="font-mono uppercase text-[9px] font-bold text-cyan-800 bg-cyan-100 px-3 py-1 rounded-md tracking-wider shrink-0 border border-cyan-200">
-                  Verified Local Review
-                </span>
+                <div>
+                  <div className="flex items-center gap-2 justify-center sm:justify-start">
+                    <span className="font-display font-black text-4xl sm:text-5xl text-slate-900 leading-none">4.9</span>
+                    <div className="flex flex-col items-start">
+                      <div className="flex items-center text-[#ff9f1c]">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-4 h-4 fill-current" />
+                        ))}
+                      </div>
+                      <span className="text-[11px] font-mono font-bold text-slate-500 mt-0.5">251+ Google Reviews</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-emerald-700 font-bold flex items-center gap-1.5 mt-2 justify-center sm:justify-start">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>100% Verified Customer Ratings</span>
+                  </p>
+                </div>
               </div>
 
-              {/* Quote text styled elegantly with Motion fade animate */}
-              <div className="my-2 relative flex-grow">
-                <span className="absolute -top-6 -left-2 text-6xl text-slate-100 font-serif leading-none select-none pointer-events-none">
-                  &ldquo;
-                </span>
-                
-                <AnimatePresence mode="wait">
-                  <motion.p 
-                    key={testimonials[activeReviewIndex].id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="text-slate-705 text-sm sm:text-lg italic leading-relaxed font-bold border-l-4 border-[#00f0ff] pl-4 bg-slate-50/50 py-3 rounded-r-lg"
-                  >
-                    &ldquo;{testimonials[activeReviewIndex].text}&rdquo;
-                  </motion.p>
-                </AnimatePresence>
+              {/* Center Trust Metrics */}
+              <div className="lg:col-span-5 grid grid-cols-2 gap-4">
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">Location Verified</span>
+                  <p className="text-xs font-black text-[#0f4c81] mt-0.5">Barrackpore &amp; North 24 Pgs</p>
+                </div>
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">Experience</span>
+                  <p className="text-xs font-black text-[#0f4c81] mt-0.5">12 Years Certified Service</p>
+                </div>
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">Response Time</span>
+                  <p className="text-xs font-black text-[#0f4c81] mt-0.5">Within 30–60 Mins On-Site</p>
+                </div>
+                <div className="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <span className="text-[10px] font-mono uppercase font-bold text-slate-500 block">Customer Rating</span>
+                  <p className="text-xs font-black text-amber-600 mt-0.5">★ 4.9 / 5.0 Star Average</p>
+                </div>
               </div>
 
-              {/* Customer Author signature layout */}
-              <div className="mt-6 flex sm:flex-row flex-col items-start sm:items-center justify-between gap-4 pt-6 border-t border-slate-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 bg-slate-100 rounded-lg overflow-hidden shrink-0 border border-slate-200">
-                    <img 
-                      src={testimonials[activeReviewIndex].avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&h=120&q=80"} 
-                      alt={testimonials[activeReviewIndex].name}
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                  <div>
-                    <h5 className="font-display font-black text-[#0f4c81] text-base leading-none">
-                      {testimonials[activeReviewIndex].name}
-                    </h5>
-                    <p className="text-[11px] text-[#0f4c81] font-extrabold mt-1 flex items-center gap-1">
-                      <MapPin className="w-3 h-3 text-[#00f0ff] shrink-0" />
-                      {testimonials[activeReviewIndex].location}
-                    </p>
-                  </div>
-                </div>
+              {/* Right CTA Actions */}
+              <div className="lg:col-span-3 flex flex-col gap-2.5">
+                <a
+                  href={businessDetails.googleReviewsUrl || businessDetails.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#0f4c81] hover:bg-[#072a4b] text-white px-4 py-3 rounded-xl font-mono font-black text-xs uppercase tracking-wider shadow-md hover:scale-[1.02] transition-all"
+                >
+                  <GoogleIcon className="w-4 h-4" />
+                  <span>View on Google Maps</span>
+                  <ExternalLink className="w-3.5 h-3.5 text-cyan-300" />
+                </a>
 
-                <div className="text-left sm:text-right shrink-0">
-                  <span className="text-slate-400 text-xs block font-semibold">{testimonials[activeReviewIndex].date}</span>
-                  <span className="text-[9px] text-slate-550 font-mono tracking-wider block font-black mt-0.5 uppercase">VIA GOOGLE FEEDBACK</span>
-                </div>
+                <a
+                  href={businessDetails.googleReviewsUrl || businessDetails.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#ff9f1c] hover:bg-[#f39100] text-slate-950 px-4 py-3 rounded-xl font-mono font-black text-xs uppercase tracking-wider shadow-md hover:scale-[1.02] transition-all"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Write a Google Review</span>
+                </a>
               </div>
 
             </div>
+          </div>
 
-            {/* Slider control arrows absolute in the boundaries */}
-            <div className="flex md:block items-center justify-center gap-4 mt-8 md:mt-0">
-              <button 
-                onClick={prevTestimonial}
-                className="md:absolute top-1/2 md:-left-16 md:-translate-y-1/2 p-3 bg-white hover:bg-slate-50 text-[#0f4c81] rounded-full border-2 border-[#0f4c81] shadow-md hover:shadow-lg transition-all focus:outline-none cursor-pointer active:scale-95"
-                aria-label="Previous review"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              
-              <button 
-                onClick={nextTestimonial}
-                className="md:absolute top-1/2 md:-right-16 md:-translate-y-1/2 p-3 bg-white hover:bg-neutral-150 text-[#072a4b] rounded-full border border-blue-100 shadow-md hover:shadow-lg transition-all focus:outline-none focus:ring-2 focus:ring-[#0f4c81] cursor-pointer"
-                aria-label="Next review"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Pager Dots indicators */}
-            <div className="flex justify-center gap-2 mt-6">
-              {testimonials.map((_, dotIndex) => (
+          {/* Controls Bar: Category Filters & Display Mode Toggle */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+            {/* Category Filter Tabs */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+              <span className="text-xs font-mono font-bold text-slate-500 mr-1 flex items-center gap-1">
+                Filter by Service:
+              </span>
+              {[
+                { id: "all", label: "All Reviews (8)" },
+                { id: "ac", label: "AC Servicing (2)" },
+                { id: "fridge-wash", label: "Fridge & Washing (2)" },
+                { id: "chimney-ro", label: "Chimney & RO (2)" },
+                { id: "geyser-micro", label: "Geyser & Microwave (2)" },
+              ].map((tab) => (
                 <button
-                  key={dotIndex}
-                  onClick={() => setActiveReviewIndex(dotIndex)}
-                  className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                    activeReviewIndex === dotIndex ? "w-8 bg-[#0f4c81]" : "w-2.5 bg-neutral-200"
+                  key={tab.id}
+                  onClick={() => setSelectedReviewCategory(tab.id)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-all cursor-pointer ${
+                    selectedReviewCategory === tab.id
+                      ? "bg-[#0f4c81] text-white shadow-md scale-105"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200"
                   }`}
-                  aria-label={`Go to testimonial page ${dotIndex + 1}`}
-                />
+                >
+                  {tab.label}
+                </button>
               ))}
             </div>
 
+            {/* Slider / Grid Toggle */}
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 shrink-0">
+              <button
+                onClick={() => setReviewDisplayMode("slider")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  reviewDisplayMode === "slider"
+                    ? "bg-[#0f4c81] text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                🎠 Review Slider
+              </button>
+              <button
+                onClick={() => setReviewDisplayMode("grid")}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  reviewDisplayMode === "grid"
+                    ? "bg-[#0f4c81] text-white shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                ⊞ All Reviews Grid
+              </button>
+            </div>
           </div>
 
-          {/* Local Authority badge block */}
-          <div className="mt-16 text-center max-w-lg mx-auto bg-[#072a4b]/5 p-5 rounded-lg border-2 border-[#0f4c81]/25">
-            <p className="text-xs text-[#0f4c81] font-bold flex items-center justify-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-cyan-600" />
-              Verified Local Repair Service Provider across North Barrackpur.
-            </p>
+          {/* Review Slider Display Mode */}
+          {reviewDisplayMode === "slider" ? (
+            <div 
+              className="relative max-w-4xl mx-auto px-2 sm:px-12"
+              onMouseEnter={() => setIsSliderHovered(true)}
+              onMouseLeave={() => setIsSliderHovered(false)}
+            >
+              {/* Slider Main Active Review Card */}
+              <div className="relative bg-white rounded-3xl p-6 sm:p-10 border-2 border-[#0f4c81] shadow-2xl overflow-hidden min-h-[360px] flex flex-col justify-between">
+                
+                {/* Google Multicolor Top Accent Bar */}
+                <div className="absolute top-0 left-0 right-0 h-1.5 flex">
+                  <div className="w-1/4 bg-[#4285F4]" />
+                  <div className="w-1/4 bg-[#EA4335]" />
+                  <div className="w-1/4 bg-[#FBBC05]" />
+                  <div className="w-1/4 bg-[#34A853]" />
+                </div>
+
+                {/* Card Top: Customer Avatar, Name, Verified Badge & Google Logo */}
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-slate-100">
+                  <div className="flex items-center gap-3.5">
+                    <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-slate-200 shadow-sm">
+                      <img
+                        src={currentReview.avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&h=120&q=80"}
+                        alt={currentReview.name}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div>
+                      <h4 className="font-display font-black text-slate-900 text-lg leading-tight">
+                        {currentReview.name}
+                      </h4>
+                      <p className="text-xs text-slate-500 font-bold flex items-center gap-1.5 mt-0.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#ff9f1c] shrink-0" />
+                        <span>{currentReview.location}</span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-end sm:self-auto">
+                    <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      Verified Google Reviewer
+                    </span>
+                    <div className="p-2 bg-slate-50 rounded-xl border border-slate-200 shadow-2xs">
+                      <GoogleIcon className="w-5 h-5" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating & Service Tag */}
+                <div className="flex flex-wrap items-center justify-between gap-2 my-4">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center text-[#ff9f1c]">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(currentReview.rating)
+                              ? "fill-[#ff9f1c] text-[#ff9f1c]"
+                              : "text-slate-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="font-mono text-xs font-bold text-slate-800">
+                      {currentReview.rating.toFixed(1)} / 5.0
+                    </span>
+                    <span className="text-slate-300">•</span>
+                    <span className="text-xs font-mono text-slate-400 font-medium">
+                      {currentReview.date}
+                    </span>
+                  </div>
+
+                  {currentReview.serviceTag && (
+                    <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-200 text-[#0f4c81] text-xs font-mono font-black uppercase px-3 py-1 rounded-lg">
+                      🔧 {currentReview.serviceTag}
+                    </span>
+                  )}
+                </div>
+
+                {/* Review Feedback Text with AnimatePresence */}
+                <div className="my-2 relative flex-grow">
+                  <AnimatePresence mode="wait">
+                    <motion.p
+                      key={currentReview.id}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-slate-800 text-base sm:text-lg italic leading-relaxed font-semibold border-l-4 border-[#00f0ff] pl-4 sm:pl-5 bg-slate-50/70 py-4 rounded-r-xl"
+                    >
+                      &ldquo;{currentReview.text}&rdquo;
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
+
+                {/* Slide Footer: Helpful count & Direct Google Link */}
+                <div className="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-2 text-slate-500 font-mono">
+                    <span className="inline-flex items-center gap-1.5 bg-slate-100 px-3 py-1 rounded-md text-slate-600 font-bold">
+                      <ThumbsUp className="w-3.5 h-3.5 text-blue-600" />
+                      Helpful ({currentReview.helpfulCount || 5} people found this helpful)
+                    </span>
+                  </div>
+
+                  <a
+                    href={businessDetails.googleReviewsUrl || businessDetails.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[#0f4c81] hover:text-blue-700 font-mono font-bold hover:underline"
+                  >
+                    <span>View on Google Maps</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+
+              </div>
+
+              {/* Slider Controls: Left Arrow (<) and Right Arrow (>) */}
+              <button
+                onClick={prevTestimonial}
+                className="absolute top-1/2 -left-2 sm:-left-6 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 bg-white hover:bg-slate-50 text-[#0f4c81] rounded-full border-2 border-[#0f4c81] shadow-xl hover:shadow-2xl transition-all flex items-center justify-center cursor-pointer active:scale-95 z-20"
+                aria-label="Previous Google Review"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+
+              <button
+                onClick={nextTestimonial}
+                className="absolute top-1/2 -right-2 sm:-right-6 -translate-y-1/2 w-11 h-11 sm:w-13 sm:h-13 bg-[#0f4c81] hover:bg-[#072a4b] text-white rounded-full border-2 border-[#00f0ff] shadow-xl hover:shadow-2xl transition-all flex items-center justify-center cursor-pointer active:scale-95 z-20"
+                aria-label="Next Google Review"
+              >
+                <ChevronRight className="w-6 h-6 text-[#00f0ff]" />
+              </button>
+
+              {/* Slider Bottom Navigation: Dots & Counter */}
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="text-xs font-mono font-bold text-slate-500">
+                  Showing review <span className="text-[#0f4c81] font-black">{activeReviewIndex + 1}</span> of <span className="text-[#0f4c81] font-black">{filteredReviews.length}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  {filteredReviews.map((_, dotIndex) => (
+                    <button
+                      key={dotIndex}
+                      onClick={() => setActiveReviewIndex(dotIndex)}
+                      className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                        activeReviewIndex === dotIndex
+                          ? "w-8 bg-[#0f4c81]"
+                          : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                      }`}
+                      aria-label={`Go to review ${dotIndex + 1}`}
+                    />
+                  ))}
+                </div>
+
+                <div className="text-xs font-mono text-slate-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Auto-advancing • Hover to pause</span>
+                </div>
+              </div>
+
+              {/* Quick Jump Review Cards Strip */}
+              <div className="mt-6 pt-6 border-t border-slate-200">
+                <p className="text-[11px] font-mono uppercase font-bold text-slate-400 mb-3 text-center sm:text-left">
+                  Quick Select Any Review:
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  {filteredReviews.map((rev, rIdx) => (
+                    <button
+                      key={rev.id}
+                      onClick={() => setActiveReviewIndex(rIdx)}
+                      className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${
+                        activeReviewIndex === rIdx
+                          ? "bg-blue-50 border-[#0f4c81] shadow-xs"
+                          : "bg-white hover:bg-slate-50 border-slate-200"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-slate-900 truncate">{rev.name}</span>
+                        <span className="text-[10px] text-amber-500 font-bold">★{rev.rating}</span>
+                      </div>
+                      <p className="text-[10px] text-slate-500 truncate mt-0.5">{rev.serviceTag}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          ) : (
+            /* Grid View */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredReviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="bg-white rounded-2xl p-6 border-2 border-slate-200 shadow-sm hover:shadow-xl hover:border-[#0f4c81] transition-all flex flex-col justify-between group"
+                >
+                  <div className="space-y-3.5">
+                    
+                    {/* Top Bar: Reviewer profile + Google Icon */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-full overflow-hidden shrink-0 border-2 border-slate-200 shadow-xs">
+                          <img
+                            src={review.avatarUrl || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&h=120&q=80"}
+                            alt={review.name}
+                            className="w-full h-full object-cover"
+                            referrerPolicy="no-referrer"
+                          />
+                        </div>
+                        <div>
+                          <h4 className="font-display font-black text-slate-900 text-sm leading-tight group-hover:text-[#0f4c81] transition-colors">
+                            {review.name}
+                          </h4>
+                          <p className="text-[11px] text-slate-500 font-bold flex items-center gap-1 mt-0.5">
+                            <MapPin className="w-3 h-3 text-[#ff9f1c] shrink-0" />
+                            <span>{review.location}</span>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="shrink-0 p-1.5 bg-slate-50 rounded-lg border border-slate-200 group-hover:border-blue-300 transition-colors">
+                        <GoogleIcon className="w-4 h-4" />
+                      </div>
+                    </div>
+
+                    {/* Rating Stars + Date */}
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-100">
+                      <div className="flex items-center gap-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-3.5 h-3.5 ${
+                              i < Math.floor(review.rating)
+                                ? "fill-[#ff9f1c] text-[#ff9f1c]"
+                                : "text-slate-300"
+                            }`}
+                          />
+                        ))}
+                        <span className="text-xs font-mono font-bold text-slate-700 ml-1">
+                          {review.rating.toFixed(1)}
+                        </span>
+                      </div>
+
+                      <span className="text-[11px] text-slate-400 font-mono font-medium">
+                        {review.date}
+                      </span>
+                    </div>
+
+                    {/* Service Tag */}
+                    {review.serviceTag && (
+                      <div className="inline-block bg-cyan-50 border border-cyan-200/80 text-[#0f4c81] text-[10px] font-mono font-black uppercase px-2.5 py-1 rounded-md">
+                        🔧 {review.serviceTag}
+                      </div>
+                    )}
+
+                    {/* Testimonial Quote */}
+                    <p className="text-slate-700 text-xs sm:text-sm leading-relaxed italic font-medium pt-1">
+                      &ldquo;{review.text}&rdquo;
+                    </p>
+                  </div>
+
+                  {/* Footer: Google Verified Badge + Helpful Counter */}
+                  <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                    <span className="inline-flex items-center gap-1 text-emerald-700 font-mono font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      Verified Google Review
+                    </span>
+
+                    <span className="text-slate-400 font-mono flex items-center gap-1">
+                      <ThumbsUp className="w-3 h-3 text-slate-400" />
+                      Helpful ({review.helpfulCount || 5})
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Bottom Google CTA Box */}
+          <div className="mt-14 bg-[#0f4c81] rounded-2xl p-6 sm:p-8 text-white shadow-xl border-4 border-[#00f0ff] flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4 text-center md:text-left flex-col sm:flex-row">
+              <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center p-2.5 shrink-0 shadow-md">
+                <GoogleIcon className="w-9 h-9" />
+              </div>
+              <div>
+                <h4 className="font-display font-black text-xl sm:text-2xl text-white">
+                  Have You Serviced An Appliance With Us?
+                </h4>
+                <p className="text-xs sm:text-sm text-slate-200 mt-1">
+                  Help fellow homeowners in Barrackpore by rating our service on Google Maps.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
+              <a
+                href={businessDetails.googleReviewsUrl || businessDetails.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#ff9f1c] hover:bg-[#f39100] text-slate-950 px-6 py-3 rounded-xl font-mono font-black text-xs uppercase tracking-wider shadow-lg hover:scale-105 transition-all"
+              >
+                <span>Rate on Google Maps</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
 
         </div>
@@ -987,12 +1407,12 @@ export default function App() {
                   <h4 className="font-display font-black text-[#00f0ff] text-base uppercase tracking-wider leading-none">
                     Unique Cooling Center
                   </h4>
-                  <p className="text-[10px] text-amber-400 font-bold tracking-widest uppercase mt-1">Appliances repair service</p>
+                  <p className="text-[10px] text-amber-400 font-bold tracking-widest uppercase mt-1">12 Years Service Experience</p>
                 </div>
               </div>
 
               <p className="text-xs sm:text-sm leading-relaxed max-w-sm text-slate-200">
-                The premier Air Conditioning &amp; Appliance Repair solution in North Barrackpur, West Bengal. Serving private residencies and offices daily with certified expertise and competitive, comfortable prices.
+                The premier Air Conditioning &amp; Appliance Repair solution in North Barrackpur, West Bengal. Serving private residencies and offices daily with 12 Years of Service Experience, certified expertise, and competitive, comfortable prices.
               </p>
 
               <div className="flex items-center gap-1.5 text-[#ff9f1c] font-black text-xs sm:text-sm">

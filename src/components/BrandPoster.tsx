@@ -49,8 +49,9 @@ export default function BrandPoster() {
             </div>
           </div>
 
-          <div className="bg-[#0f4c81] p-3 rounded-xl border-b-4 border-[#00f0ff] text-[#00f0ff] shadow-md animate-pulse shrink-0">
-            <Sparkles className="w-6 h-6" />
+          <div className="bg-[#0f4c81] px-3 py-2 rounded-xl border-b-4 border-[#00f0ff] text-center shadow-md shrink-0">
+            <span className="block font-display font-black text-lg sm:text-xl text-[#00f0ff] leading-none">12+</span>
+            <span className="block text-[8px] sm:text-[9px] font-mono font-bold text-amber-300 uppercase tracking-tighter leading-tight mt-0.5">Years Exp.</span>
           </div>
         </div>
 
@@ -60,7 +61,7 @@ export default function BrandPoster() {
             <div className="bg-emerald-50 text-emerald-600 p-1 rounded-full border border-emerald-200">
               <ShieldCheck className="w-3.5 h-3.5" />
             </div>
-            <span className="text-[10px] sm:text-xs font-extrabold text-slate-700 uppercase tracking-tight">EXPERT TECHNICIAN</span>
+            <span className="text-[10px] sm:text-xs font-extrabold text-slate-700 uppercase tracking-tight">12 YRS SERVICE EXP.</span>
           </div>
 
           <div className="flex items-center gap-2 border border-slate-100 p-1.5 rounded-lg hover:bg-slate-50 transition-colors">
@@ -116,7 +117,7 @@ export default function BrandPoster() {
           {/* AC Technician Badge (Overlaying top right) */}
           <div className="absolute top-3 right-3 bg-[#0f4c81]/95 text-white py-1.5 px-3 rounded-lg shadow-md border border-cyan-400/40 backdrop-blur-md flex items-center gap-1.5 z-30">
             <div className="w-2.5 h-2.5 rounded-full bg-[#00f0ff] animate-ping" />
-            <span className="text-[9px] font-mono font-black tracking-widest uppercase text-white">AC TECHNICIAN SERVICE</span>
+            <span className="text-[9px] font-mono font-black tracking-widest uppercase text-white">12 YEARS SERVICE EXPERIENCE</span>
           </div>
         </div>
 

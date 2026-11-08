@@ -89,7 +89,7 @@ export default function GeyserPoster({ imageSrc }: GeyserPosterProps) {
                 Expert Technicians
               </h4>
               <p className="text-xs text-slate-600 font-bold mt-0.5">
-                Trained &amp; Experienced
+                12 Years Service Experience
               </p>
             </div>
           </div>
